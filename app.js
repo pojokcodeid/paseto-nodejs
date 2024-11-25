@@ -1,5 +1,6 @@
 import { V4 as paseto } from "paseto";
 import { createPrivateKey } from 'crypto';
+import 'dotenv/config';
 
 (async () => {
   // ---- ini part untuk generate key -----
@@ -14,11 +15,12 @@ import { createPrivateKey } from 'crypto';
   // console.log('Private Key (PEM):', privateKeyPem);
 
   // ---- par untuk generate token -----
-  const privateKeyPem = `
------BEGIN PRIVATE KEY-----
-MC4CAQAwBQYDK2VwBCIEIBu0CXPHGYxXmasJ4FIuVUMIt4bUhPXOkF2+zdgL2/fH
------END PRIVATE KEY-----
-`;
+  //   const privateKeyPem = `
+  // -----BEGIN PRIVATE KEY-----
+  // MC4CAQAwBQYDK2VwBCIEIBu0CXPHGYxXmasJ4FIuVUMIt4bUhPXOkF2+zdgL2/fH
+  // -----END PRIVATE KEY-----
+  // `;
+  const privateKeyPem = process.env.PRIVATE_KEY;
   const key = createPrivateKey(privateKeyPem)
   console.log(key)
   const payload = {
