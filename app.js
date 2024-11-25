@@ -2,41 +2,11 @@ import { V4 as paseto } from "paseto";
 import { createPrivateKey } from 'crypto';
 import 'dotenv/config';
 
-(async () => {
-  // ---- ini part untuk generate key -----
-  // -----Generate a key pair for the 'public' purpose
-  // const keyPair = await paseto.generateKey("public");
-
-  // -----Export the private key
-  // const privateKeyPem = keyPair.export({
-  //   format: 'pem',
-  //   type: 'pkcs8',
-  // });
-  // console.log('Private Key (PEM):', privateKeyPem);
-
-  // ---- par untuk generate token -----
-  //   const privateKeyPem = `
-  // -----BEGIN PRIVATE KEY-----
-  // MC4CAQAwBQYDK2VwBCIEIBu0CXPHGYxXmasJ4FIuVUMIt4bUhPXOkF2+zdgL2/fH
-  // -----END PRIVATE KEY-----
-  // `;
+const verfy = async () => {
   const privateKeyPem = process.env.PRIVATE_KEY;
   const key = createPrivateKey(privateKeyPem)
-  console.log(key)
-  const payload = {
-    'urn:example:claim': 'foo'
-  }
-  const token = await paseto.sign(payload, key, {
-    audience: 'urn:example:client',
-    issuer: 'https://op.example.com',
-    expiresIn: '2 hours'
-  });
-  console.log(token);
-  // ---- ini part untuk verify token -----
-  const result = await paseto.verify(token, key, {
-    audience: 'urn:example:client',
-    issuer: 'https://op.example.com',
-    clockTolerance: '1 min'
-  })
+  const token = "v4.public.eyJ1c2VyX2lkIjoiMDAwMDEiLCJuYW1lIjoiUG9qb2sgQ29kZSIsImFnZSI6MjAsImlhdCI6IjIwMjQtMTEtMjVUMTA6MzY6MTMuODY5WiIsImV4cCI6IjIwMjQtMTEtMjVUMTI6MzY6MTMuODY5WiIsImF1ZCI6InVzZXJfaWQiLCJpc3MiOiJodHRwczovL29wLmV4YW1wbGUuY29tIn0oKPUdAyawb_c7TqwA6PiXPB58Vo4sOyM9pUBvLa9cid6smn-6H-78R_1lFlVjsO6xGxV8TMcth_xG_o8N9i4C";
+  const result = await paseto.verify(token, key)
   console.log(result)
-})();
+}
+verfy()
