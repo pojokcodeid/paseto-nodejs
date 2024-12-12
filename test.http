@@ -1,0 +1,12 @@
+@acessToken=v4.public.eyJ1c2VyX2lkIjoiMDAwMDEiLCJuYW1lIjoiUG9qb2sgQ29kZSIsImFnZSI6MjAsImlhdCI6IjIwMjQtMTItMTJUMTM6NTM6MjUuMDIyWiIsImV4cCI6IjIwMjQtMTItMTJUMTU6NTM6MjUuMDIyWiIsImF1ZCI6InVzZXJfaWQiLCJpc3MiOiJodHRwczovL3Bvam9rY29kZS5jb20ifRxpKsGOABstMlw3-zIyDMe9nSxJSukvsXn4yhf9OuLa5-Ml83Ak6oQj4W-h6QyYn2FhAkxxnortxqT4jzuZQgU
+### login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+{
+  "username": "john_doe",
+  "password": "123456"
+}
+
+POST http://localhost:3000/auth/verify
+Content-Type: application/json
+Authorization: Bearer {{acessToken}}

@@ -1,12 +1,40 @@
-import { V4 as paseto } from "paseto";
-import { createPrivateKey } from 'crypto';
-import 'dotenv/config';
+import "dotenv/config";
+import jsonServer from "json-server";
+import { createToken, verfy } from "./createToken.js";
+const server = jsonServer.create();
+const router = jsonServer.router("db.json");
+const middlewares = jsonServer.defaults();
+server.use(middlewares);
+server.use(jsonServer.bodyParser);
 
-const verfy = async () => {
-  const privateKeyPem = process.env.PRIVATE_KEY;
-  const key = createPrivateKey(privateKeyPem)
-  const token = "v4.public.eyJ1c2VyX2lkIjoiMDAwMDEiLCJuYW1lIjoiUG9qb2sgQ29kZSIsImFnZSI6MjAsImlhdCI6IjIwMjQtMTEtMjVUMTA6MzY6MTMuODY5WiIsImV4cCI6IjIwMjQtMTEtMjVUMTI6MzY6MTMuODY5WiIsImF1ZCI6InVzZXJfaWQiLCJpc3MiOiJodHRwczovL29wLmV4YW1wbGUuY29tIn0oKPUdAyawb_c7TqwA6PiXPB58Vo4sOyM9pUBvLa9cid6smn-6H-78R_1lFlVjsO6xGxV8TMcth_xG_o8N9i4C";
-  const result = await paseto.verify(token, key)
-  console.log(result)
-}
-verfy()
+server.post("/auth/login", async (req, res) => {
+  const { username, password } = req.body;
+  const user = router.db.get("users").find({ username, password }).value();
+  if (user) {
+    // load data dari db misalkan
+    const payload = {
+      user_id: "00001",
+      name: "Pojok Code",
+      age: 20,
+    };
+    const accessToken = await createToken(payload);
+    res.status(200).json({ accessToken });
+  } else {
+    res.status(401).json({ message: "Invalid credentials" });
+  }
+});
+
+server.post("/auth/verify", async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  try {
+    const decoded = await verfy(token);
+    res.status(200).json({ message: "Verified Success", data: decoded });
+  } catch (err) {
+    res.status(401).json({ message: err.message });
+  }
+});
+
+server.use(router);
+server.listen(3000, () => {
+  console.log("JSON Server is running");
+});
